@@ -1,9 +1,13 @@
-# Kafka Connect HDFS Connector
+
 
 kafka-connect-hdfs is a [Kafka Connector](http://kafka.apache.org/documentation.html#connect)
 for copying data between Kafka and Hadoop HDFS.
 
 Documentation for this connector can be found [here](http://docs.confluent.io/current/connect/connect-hdfs/docs/index.html).
+
+# What's New?
+
+A new [HourlyPartitioner](https://github.com/jiangxiluning/kafka-connect-hdfs/blob/master/src/main/java/io/confluent/connect/hdfs/partitioner/FieldHourlyPartitioner.java) which can partition specific field using TimebasedPartitioner.
 
 # Development
 
