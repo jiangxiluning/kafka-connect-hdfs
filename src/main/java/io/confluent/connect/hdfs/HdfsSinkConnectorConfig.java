@@ -14,6 +14,7 @@
 
 package io.confluent.connect.hdfs;
 
+import io.confluent.connect.hdfs.partitioner.*;
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigDef.Importance;
@@ -25,13 +26,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import io.confluent.connect.hdfs.partitioner.DailyPartitioner;
-import io.confluent.connect.hdfs.partitioner.DefaultPartitioner;
-import io.confluent.connect.hdfs.partitioner.FieldPartitioner;
-import io.confluent.connect.hdfs.partitioner.HourlyPartitioner;
-import io.confluent.connect.hdfs.partitioner.Partitioner;
-import io.confluent.connect.hdfs.partitioner.TimeBasedPartitioner;
 
 public class HdfsSinkConnectorConfig extends AbstractConfig {
 
@@ -384,7 +378,11 @@ public class HdfsSinkConnectorConfig extends AbstractConfig {
           // subclass of TimeBasedPartitioner
           if (classNameEquals(partitionerName, DailyPartitioner.class) || classNameEquals(partitionerName, HourlyPartitioner.class)) {
             return name.equals(LOCALE_CONFIG) || name.equals(TIMEZONE_CONFIG);
-          } else {
+          }else if (classNameEquals(partitionerName, FieldHourlyPartitioner.class)) {
+            // new field hourly partitioner
+            return  name.equals(LOCALE_CONFIG) || name.equals(TIMEZONE_CONFIG) || name.equals(PARTITION_FIELD_NAME_CONFIG);
+          }
+          else {
             return name.equals(PARTITION_DURATION_MS_CONFIG) || name.equals(PATH_FORMAT_CONFIG) || name.equals(LOCALE_CONFIG) || name.equals(TIMEZONE_CONFIG);
           }
         } else {

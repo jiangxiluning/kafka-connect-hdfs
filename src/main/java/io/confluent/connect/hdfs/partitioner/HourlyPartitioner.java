@@ -25,8 +25,8 @@ import io.confluent.connect.hdfs.HdfsSinkConnectorConfig;
 
 public class HourlyPartitioner extends TimeBasedPartitioner {
 
-  private static long partitionDurationMs = TimeUnit.HOURS.toMillis(1);
-  private static String pathFormat = "'year'=YYYY/'month'=MM/'day'=dd/'hour'=HH/";
+  protected static long partitionDurationMs = TimeUnit.HOURS.toMillis(1);
+  protected static String pathFormat = "'year'=YYYY/'month'=MM/'day'=dd/'hour'=HH/";
 
   @Override
   public void configure(Map<String, Object> config) {

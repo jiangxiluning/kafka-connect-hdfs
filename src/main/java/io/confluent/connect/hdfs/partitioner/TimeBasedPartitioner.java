@@ -36,7 +36,7 @@ public class TimeBasedPartitioner implements Partitioner {
 
   // Duration of a partition in milliseconds.
   private long partitionDurationMs;
-  private DateTimeFormatter formatter;
+  protected DateTimeFormatter formatter;
   protected List<FieldSchema> partitionFields = new ArrayList<>();
   private static String patternString = "'year'=Y{1,5}/('month'=M{1,5}/)?('day'=d{1,3}/)?('hour'=H{1,3}/)?('minute'=m{1,3}/)?";
   private static Pattern pattern = Pattern.compile(patternString);
