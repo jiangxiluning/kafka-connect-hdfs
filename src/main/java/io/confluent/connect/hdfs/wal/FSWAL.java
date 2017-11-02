@@ -15,6 +15,7 @@
 package io.confluent.connect.hdfs.wal;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.ipc.RemoteException;
 import org.apache.kafka.common.TopicPartition;
@@ -100,6 +101,25 @@ public class FSWAL implements WAL {
   public void apply() throws ConnectException {
     try {
       if (!storage.exists(logFile)) {
+        return;
+      }
+      // NB: We need to fork this file to fix the race condition described here:
+      // https://github.com/confluentinc/kafka-connect-hdfs/issues/53
+      // The issue is that an empty log file might be created (connect process killed before
+      // header could be written) due to which the recovery persistently fails.
+      FileStatus[] statuses = storage.listStatus(logFile);
+
+
+      if (statuses.length != 1) {
+        throw new AssertionError(String.format(
+                "Expected one log file at path: %s. Found multiple files.", logFile
+        )
+        );
+      }
+
+      // There can only be one log file. So this is safe.
+      if (statuses[0].getLen() == 0) {
+        log.warn(String.format("Found empty log file at path: %s", logFile));
         return;
       }
       acquireLease();
